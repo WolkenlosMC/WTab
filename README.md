@@ -3,7 +3,7 @@
 ## Installing
 [LuckPerms] is required.
 
-[Click]() to install WTab v1.0
+[Click](https://drive.google.com/file/d/1Tq84RfzdYERyGF2T1YWJkCQxvrqw9_EC/view?usp=share_link) to install WTab v1.0
 
 ## Roadmap 
 - finish the plugin
