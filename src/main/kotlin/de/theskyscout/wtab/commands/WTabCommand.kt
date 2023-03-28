@@ -37,7 +37,7 @@ class WTabCommand: CommandExecutor, TabCompleter {
                         sender.sendMessage(mm.deserialize(Config.prefix() + "<red> /wtab set [name] [ prefix | order ] [ value ]"))
                         return true
                     }
-                    if(GroupManager.getGroup(args[1]) == null) {
+                    if(!GroupManager.existGroup(args[1])) {
                         sender.sendMessage(mm.deserialize(Config.prefix() + "<red> There is no group with this name"))
                         return true
                     }
@@ -62,10 +62,10 @@ class WTabCommand: CommandExecutor, TabCompleter {
                         return true
                     } else if(Config.isPerms()) {
                         if(args.size != 4) {
-                            sender.sendMessage(mm.deserialize(Config.prefix() + "<red> /wtab create [name]"))
+                            sender.sendMessage(mm.deserialize(Config.prefix() + "<red> /wtab create [name] [prefix] [order]"))
                                 return true
                         }
-                        if(GroupManager.getGroup(args[1]) != null) {
+                        if(GroupManager.existGroup(args[1])) {
                             sender.sendMessage(mm.deserialize(Config.prefix() + "<red> There is already a group with this name"))
                             return true
                         }
@@ -77,6 +77,19 @@ class WTabCommand: CommandExecutor, TabCompleter {
                         sender.sendMessage(mm.deserialize(Config.prefix() + "<gray> The group <green>${args[1]}<gray> was created"))
                         sender.playSound(sender.location, "minecraft:entity.player.levelup", 5F, 2F)
                     }
+                }
+                "delete" -> {
+                    if(args.size != 2) {
+                        sender.sendMessage(mm.deserialize(Config.prefix() + "<red> /wtab delete [name]"))
+                        return true
+                    }
+                    if(!GroupManager.existGroup(args[1])) {
+                        sender.sendMessage(mm.deserialize(Config.prefix() + "<red> There is no group with this name"))
+                        return true
+                    }
+                    GroupManager.removeGroup(args[1])
+                    sender.sendMessage(mm.deserialize(Config.prefix() + "<gray> The group <green>${args[1]}<gray> was deleted"))
+                    sender.playSound(sender.location, "minecraft:entity.player.levelup", 5F, 2F)
                 }
             }
 
