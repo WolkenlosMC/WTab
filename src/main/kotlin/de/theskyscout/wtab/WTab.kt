@@ -14,6 +14,7 @@ class WTab : JavaPlugin() {
     override fun onEnable() {
         instance = this
         Config.load()
+        Config.loadLuckPerms()
         MongoDB.connect()
         registerCommands()
     }

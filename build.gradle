@@ -25,7 +25,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
     implementation "commons-io:commons-io:2.11.0"
     implementation 'org.mongodb:mongo-java-driver:3.12.11'
-    implementation "net.luckperms:api:5.4"
+    compileOnly "net.luckperms:api:5.4"
 }
 
 def targetJavaVersion = 17

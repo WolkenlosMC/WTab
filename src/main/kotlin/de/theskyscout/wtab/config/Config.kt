@@ -1,6 +1,9 @@
 package de.theskyscout.wtab.config
 
+import de.theskyscout.wtab.WTab
 import de.theskyscout.wtab.utils.ConfigUtil
+import net.luckperms.api.LuckPermsProvider
+import org.bukkit.Bukkit
 
 object Config {
 
@@ -46,5 +49,16 @@ object Config {
 
     fun save() {
         ConfigUtil("config.yml").save()
+    }
+
+    fun loadLuckPerms() {
+        if(isLuckperms()) {
+            if(Bukkit.getServer().pluginManager.getPlugin("LuckPerms") == null) {
+                WTab.instance.logger.severe("LuckPerms is not installed!")
+                Bukkit.getPluginManager().disablePlugin(WTab.instance)
+                return
+            }
+            LuckPermsProvider.get()
+        }
     }
 }

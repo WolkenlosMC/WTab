@@ -76,6 +76,14 @@ object GroupManager {
     }
 
     fun getAllGroups() : List<Document> {
+        if(Config.isLuckperms()) {
+            val luckPermsAPI = LuckPermsProvider.get()
+            val result = mutableListOf<Document>()
+            for (group in luckPermsAPI.groupManager.loadedGroups) {
+                result.add(Document().append("_id", group.name).append("prefix", getGroup(group.name)?.get("prefix")).append("order", getGroup(group.name)?.get("order")))
+            }
+            return result
+        }
         if(Config.saveMethodIsMongoDB()) {
             val result = MongoDB.collection.find().sort(Document().append("order", 1)).into(mutableListOf())
             return result
