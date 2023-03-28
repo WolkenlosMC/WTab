@@ -13,7 +13,7 @@ class WTab : JavaPlugin() {
 
     override fun onEnable() {
         instance = this
-        //Comment 2
+        //Comment 1 test
         Config.load()
         MongoDB.connect()
         registerCommands()
