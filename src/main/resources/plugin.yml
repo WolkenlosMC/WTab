@@ -1,0 +1,12 @@
+name: WTab
+version: '${version}'
+main: de.theskyscout.wtab.WTab
+api-version: 1.19
+authors: [ TheSkyScout ]
+description: Wolkenlos Tablist Plugin
+commands:
+  wtab:
+    description: Wolkenlos Tablist Plugin
+    aliases: [ tab ]
+    usage: /wtab [ create | delete | set | list ]
+    permission: wtab.edit
