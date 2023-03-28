@@ -28,8 +28,8 @@ class WTabCommand: CommandExecutor, TabCompleter {
                     sender.sendMessage(mm.deserialize(Config.prefix() + "<gray>All Groups:"))
                     GroupManager.getAllGroups().forEach {
                         sender.sendMessage(mm.deserialize("<gray>${it["_id"]}:"))
-                        sender.sendMessage(mm.deserialize("<gray>   <gray>Prefix: ${it["prefix"]}"))
-                        sender.sendMessage(mm.deserialize("<gray>   <gray>Order: ${it["order"]}"))
+                        sender.sendMessage(mm.deserialize("<#2f3136>  |- <gray>Prefix: ${it["prefix"]}"))
+                        sender.sendMessage(mm.deserialize("<#2f3136>  |- <gray>Order: ${it["order"]}"))
                     }
                 }
                 "set" -> {
@@ -79,7 +79,11 @@ class WTabCommand: CommandExecutor, TabCompleter {
                     }
                 }
                 "delete" -> {
-                    if(args.size != 2) {
+                    if(Config.isLuckperms()) {
+                        sender.sendMessage(mm.deserialize(Config.prefix() + "<red> You can't create a group with this save method"))
+                        return true
+                    }
+                        if(args.size != 2) {
                         sender.sendMessage(mm.deserialize(Config.prefix() + "<red> /wtab delete [name]"))
                         return true
                     }
@@ -109,8 +113,9 @@ class WTabCommand: CommandExecutor, TabCompleter {
             tabComplete.add("list")
             tabComplete.add("set")
             tabComplete.add("create")
+            tabComplete.add("delete")
         } else if(args.size == 2) {
-            if(args[0] == "set") {
+            if(args[0] == "set" || args[0] == "delete") {
                 GroupManager.getAllGroups().forEach {
                     tabComplete.add(it["_id"].toString())
                 }

@@ -3,6 +3,7 @@ package de.theskyscout.wtab.manager
 import de.theskyscout.wtab.config.Config
 import de.theskyscout.wtab.database.MongoDB
 import de.theskyscout.wtab.utils.ConfigUtil
+import net.luckperms.api.LuckPermsProvider
 import org.bson.Document
 
 object GroupManager {
@@ -91,6 +92,10 @@ object GroupManager {
     }
 
     fun existGroup(name: String) : Boolean{
+        if(Config.isLuckperms()) {
+            val luckPermsAPI = LuckPermsProvider.get()
+            return luckPermsAPI.groupManager.getGroup(name) != null
+        }
         if(Config.saveMethodIsMongoDB()) {
             val result = MongoDB.collection.find(Document().append("_id", name)).first() ?: return false
             return true
