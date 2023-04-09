@@ -32,6 +32,15 @@ class WTabCommand: CommandExecutor, TabCompleter {
                         sender.sendMessage(mm.deserialize("<#2f3136>  |- <gray>Order: ${it["order"]}"))
                     }
                 }
+                "exists" -> {
+                    if(args.size != 2) {
+                        sender.sendMessage(mm.deserialize(Config.prefix() + "<red> /wtab exists [name]"))
+                        return true
+                    }
+                    if(GroupManager.existGroup(args[1])) {
+                        sender.sendMessage(mm.deserialize(Config.prefix() + "<green> The group ${args[1]} exists"))
+                    } else sender.sendMessage(mm.deserialize(Config.prefix() + "<red> The group ${args[1]} does not exist"))
+                }
                 "set" -> {
                     if(args.size != 4) {
                         sender.sendMessage(mm.deserialize(Config.prefix() + "<red> /wtab set [name] [ prefix | order ] [ value ]"))
@@ -97,7 +106,7 @@ class WTabCommand: CommandExecutor, TabCompleter {
                 }
             }
 
-        }
+        } else TODO()
 
         return true
     }

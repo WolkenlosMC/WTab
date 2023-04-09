@@ -11,7 +11,7 @@ object GroupManager {
     fun setGroupPrefix(name: String, prefix: String) {
         if(Config.saveMethodIsMongoDB()) {
             val set = "$" +"set"
-            if(!existGroup(name)) {
+            if(!existGroupData(name)) {
                 MongoDB.collection.insertOne(Document().append("_id", name).append("prefix", prefix).append("order", 0))
                 return
             }
@@ -29,7 +29,7 @@ object GroupManager {
     fun setGroupOrder(name: String, order: Int) {
         if(Config.saveMethodIsMongoDB()) {
             val set = "$" +"set"
-            if(!existGroup(name)) {
+            if(!existGroupData(name)) {
                 MongoDB.collection.insertOne(Document().append("_id", name).append("prefix", "").append("order", order))
                 return
             }
@@ -99,6 +99,16 @@ object GroupManager {
 
     }
 
+    fun existGroupData(name: String) : Boolean{
+        if(Config.saveMethodIsMongoDB()) {
+            val result = MongoDB.collection.find(Document().append("_id", name)).first() ?: return false
+            return true
+        }
+        if (Config.saveMethodIsFile()) {
+            return ConfigUtil("groups.yml").config.contains(name)
+        }
+        return false
+    }
     fun existGroup(name: String) : Boolean{
         if(Config.isLuckperms()) {
             val luckPermsAPI = LuckPermsProvider.get()
