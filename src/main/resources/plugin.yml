@@ -6,7 +6,7 @@ authors: [ TheSkyScout ]
 description: Wolkenlos Tablist Plugin
 commands:
   wtab:
-    description: Wolkenlos Tablist Plugin
+    description: Customize the tablist
     aliases: [ tab ]
-    usage: /wtab [ create | delete | set | list ]
+    usage: /wtab [ create | delete | set | list | exists ]
     permission: wtab.edit

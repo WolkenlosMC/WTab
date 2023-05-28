@@ -3,8 +3,15 @@ package de.theskyscout.wtab.manager
 import de.theskyscout.wtab.config.Config
 import de.theskyscout.wtab.database.MongoDB
 import de.theskyscout.wtab.utils.ConfigUtil
+import de.theskyscout.wtab.utils.ItemBuilder
+import de.theskyscout.wtab.utils.TablistSortUtil
 import net.luckperms.api.LuckPermsProvider
 import org.bson.Document
+import org.bukkit.Bukkit
+import org.bukkit.Material
+import org.bukkit.entity.Player
+import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.ItemStack
 
 object GroupManager {
 
@@ -82,18 +89,18 @@ object GroupManager {
             for (group in luckPermsAPI.groupManager.loadedGroups) {
                 result.add(Document().append("_id", group.name).append("prefix", getGroup(group.name)?.get("prefix")).append("order", getGroup(group.name)?.get("order")))
             }
-            return result
+            return result.sortedBy { it["order"] as Int? ?: 0  }
         }
         if(Config.saveMethodIsMongoDB()) {
             val result = MongoDB.collection.find().sort(Document().append("order", 1)).into(mutableListOf())
-            return result
+            return result.sortedBy { it["order"] as Int? ?: 0  }
         }else if (Config.saveMethodIsFile()) {
             val config = ConfigUtil("groups.yml")
             val result = mutableListOf<Document>()
             for (group in config.config.getKeys(false)) {
                 result.add(Document().append("_id", group).append("prefix", config.config.getString("$group.prefix")).append("order", config.config.getInt("$group.order")))
             }
-            return result
+            return result.sortedBy { it["order"] as Int? ?: 0  }
         }
         return mutableListOf()
 
@@ -122,6 +129,45 @@ object GroupManager {
             return ConfigUtil("groups.yml").config.contains(name)
         }
         return false
+    }
+
+    fun getGroupListAsItemList(): List<ItemStack> {
+        val result = mutableListOf<ItemStack>()
+        for (group in getAllGroups()) {
+            result.add(ItemBuilder(Material.NAME_TAG)
+                .setDisplayName("<#34ebde>${group["_id"].toString().capitalize()}")
+                .addLore("<gray>------------------")
+                .addLore("<gray>Prefix: ${group["prefix"]}")
+                .addLore("<gray>Order: <green>${group["order"]}")
+                .toItemStack()
+            )
+        }
+        return result
+    }
+
+    fun getGroupListInventory() : Inventory {
+        val inventory = Bukkit.createInventory(null, 54, "Groups")
+        for (item in getGroupListAsItemList()) {
+            inventory.addItem(item)
+        }
+        return inventory
+    }
+
+    fun getPrefix(player: Player): String {
+        if(Config.isLuckperms()) {
+            val api = LuckPermsProvider.get()
+            val user = api.userManager.getUser(player.uniqueId)
+            val group = user?.primaryGroup ?: return ""
+            if(!GroupManager.existGroup(group)) return ""
+            return GroupManager.getGroup(group)?.get("prefix").toString()
+        } else {
+            GroupManager.getAllGroups().forEach {
+                if(player.hasPermission("wtab." + it["_id"].toString())) {
+                    return it["prefix"].toString()
+                }
+            }
+        }
+        return ""
     }
 
 }

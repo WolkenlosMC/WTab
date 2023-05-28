@@ -27,6 +27,12 @@ class WTabCommand: CommandExecutor, TabCompleter {
             }
             when(args[0]) {
                 "list" -> {
+                    if(args.size == 2) {
+                        if(args[1].equals("-inv") || args[1].equals("-i")) {
+                            sender.openInventory(GroupManager.getGroupListInventory())
+                            return true
+                        } else sender.sendMessage(mm.deserialize(Config.prefix() + "<red> /wtab list [-inv]"))
+                    }
                     sender.sendMessage(mm.deserialize(Config.prefix() + "<gray>All Groups:"))
                     GroupManager.getAllGroups().forEach {
                         sender.sendMessage(mm.deserialize("<gray>${it["_id"]}:"))
@@ -91,7 +97,7 @@ class WTabCommand: CommandExecutor, TabCompleter {
                 }
                 "delete" -> {
                     if(Config.isLuckperms()) {
-                        sender.sendMessage(mm.deserialize(Config.prefix() + "<red> You can't create a group with this save method"))
+                        sender.sendMessage(mm.deserialize(Config.prefix() + "<red> You can't delete a group with this save method"))
                         return true
                     }
                         if(args.size != 2) {
@@ -125,6 +131,7 @@ class WTabCommand: CommandExecutor, TabCompleter {
             tabComplete.add("set")
             tabComplete.add("create")
             tabComplete.add("delete")
+            tabComplete.add("exists")
         } else if(args.size == 2) {
             if(args[0] == "set" || args[0] == "delete") {
                 GroupManager.getAllGroups().forEach {
