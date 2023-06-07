@@ -10,6 +10,7 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.cloudnetservice.eu/repository/releases/' }
     maven {
         name = "papermc-repo"
         url = "https://repo.papermc.io/repository/maven-public/"
@@ -21,10 +22,12 @@ repositories {
 }
 
 dependencies {
+
     paperweight.paperDevBundle("1.19.2-R0.1-SNAPSHOT")
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
     implementation "commons-io:commons-io:2.11.0"
     implementation 'org.mongodb:mongo-java-driver:3.12.11'
+    implementation 'de.dytanic.cloudnet:driver:3.4.0-RELEASE'
     compileOnly "net.luckperms:api:5.4"
 }
 

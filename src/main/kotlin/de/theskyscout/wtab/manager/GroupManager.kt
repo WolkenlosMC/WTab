@@ -82,6 +82,73 @@ object GroupManager {
         }
     }
 
+    fun setHeader(header: String) {
+        if(Config.saveMethodIsMongoDB()) {
+            val set = "$" +"set"
+            if(!existHeaderFooter()) {
+                MongoDB.collection.insertOne(Document().append("_id", "settings").append("header", header).append("footer", ""))
+                return
+            }
+            MongoDB.collection.updateOne(
+                Document().append("_id", "settings"),
+                Document().append(set,
+                    Document().append("header", header)))
+        }else if (Config.saveMethodIsFile()) {
+            val config = ConfigUtil("config.yml")
+            config.config.set("header", header)
+            config.save()
+        }
+    }
+
+    fun setFooter(footer: String) {
+        if(Config.saveMethodIsMongoDB()) {
+            val set = "$" +"set"
+            if(!existHeaderFooter()) {
+                MongoDB.collection.insertOne(Document().append("_id", "settings").append("header", "").append("footer", footer))
+                return
+            }
+            MongoDB.collection.updateOne(
+                Document().append("_id", "settings"),
+                Document().append(set,
+                    Document().append("footer", footer)))
+        }else if (Config.saveMethodIsFile()) {
+            val config = ConfigUtil("config.yml")
+            config.config.set("footer", footer)
+            config.save()
+        }
+    }
+
+    fun existHeaderFooter() : Boolean {
+        if(Config.saveMethodIsMongoDB()) {
+            return MongoDB.collection.find(Document().append("_id", "settings")).first() != null
+        }else if (Config.saveMethodIsFile()) {
+            val config = ConfigUtil("config.yml")
+            return config.config.contains("header") && config.config.contains("footer")
+        }
+        return false
+    }
+
+    fun getHeader() : String {
+        if(Config.saveMethodIsMongoDB()) {
+            return MongoDB.collection.find(Document().append("_id", "settings")).first()?.getString("header") ?: ""
+        }else if (Config.saveMethodIsFile()) {
+            val config = ConfigUtil("config.yml")
+            return config.config.getString("header") ?: ""
+        }
+        return ""
+    }
+
+    fun getFooter() : String {
+        if(Config.saveMethodIsMongoDB()) {
+            return MongoDB.collection.find(Document().append("_id", "settings")).first()?.getString("footer") ?: ""
+        }else if (Config.saveMethodIsFile()) {
+            val config = ConfigUtil("config.yml")
+            return config.config.getString("footer") ?: ""
+        }
+        return ""
+    }
+
+
     fun getAllGroups() : List<Document> {
         if(Config.isLuckperms()) {
             val luckPermsAPI = LuckPermsProvider.get()
@@ -92,7 +159,12 @@ object GroupManager {
             return result.sortedBy { it["order"] as Int? ?: 0  }
         }
         if(Config.saveMethodIsMongoDB()) {
-            val result = MongoDB.collection.find().sort(Document().append("order", 1)).into(mutableListOf())
+            val result = mutableListOf<Document>()
+            MongoDB.collection.find().forEach {
+               if(it.getString("_id") != "settings") {
+                   result.add(Document().append("_id", it.getString("_id")).append("prefix", it.getString("prefix")).append("order", it.getInteger("order")))
+               }
+            }
             return result.sortedBy { it["order"] as Int? ?: 0  }
         }else if (Config.saveMethodIsFile()) {
             val config = ConfigUtil("groups.yml")

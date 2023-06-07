@@ -9,12 +9,14 @@ import net.luckperms.api.LuckPermsProvider
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
+import java.awt.GridBagConstraints
 
 object TablistManager {
     private val mm = MiniMessage.miniMessage()
 
     fun setTablist(player: Player) {
-        TODO()
+        val scoreboard = player.scoreboard
+        player.sendPlayerListHeaderAndFooter(mm.deserialize(GroupManager.getHeader()), mm.deserialize(GroupManager.getFooter()))
     }
 
 
@@ -38,12 +40,13 @@ object TablistManager {
             val team = scoreboard.getTeam(TablistSortUtil.orderToSort(GroupManager.getGroup(group)!!))
             team?.addEntry(player.name)
         } else {
-            GroupManager.getAllGroups().forEach {
-                val team = scoreboard.getTeam(TablistSortUtil.orderToSort(it))
-                if(player.hasPermission("wtab." + it["_id"].toString())) {
-                    team?.addEntry(player.name)
-                }
-            }
+             for (it in GroupManager.getAllGroups()) {
+                 val team = scoreboard.getTeam(TablistSortUtil.orderToSort(it))
+                 if(player.hasPermission("wtab." + it["_id"].toString())) {
+                     team?.addEntry(player.name)
+                     break
+                 }
+             }
         }
     }
 
@@ -51,6 +54,7 @@ object TablistManager {
         Bukkit.getOnlinePlayers().forEach {
             registerTeams(it)
             setPlayerTeam(it)
+            setTablist(it)
         }
     }
 

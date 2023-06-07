@@ -19,7 +19,11 @@ tablist-method: "PERMISSION"
 #PERMISSION - Use Permissions to set the tablist
 #LUCKPERMS - Use LuckPerms to set the tablist
 
-
+# Only needed when save method is FILE
+header: ""
+#Header of the tablist
+footer: ""
+#Footer of the tablist
 
 ########################################################################################
 #                                         Database                                     #

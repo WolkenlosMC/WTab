@@ -1,6 +1,7 @@
 package de.theskyscout.wtab.commands
 
 import de.theskyscout.wtab.config.Config
+import de.theskyscout.wtab.manager.CloudNetManager
 import de.theskyscout.wtab.manager.GroupManager
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.command.Command
@@ -112,6 +113,35 @@ class WTabCommand: CommandExecutor, TabCompleter {
                     sender.sendMessage(mm.deserialize(Config.prefix() + "<gray> The group <green>${args[1]}<gray> was deleted"))
                     sender.playSound(sender.location, "minecraft:entity.player.levelup", 5F, 2F)
                 }
+                "header" -> {
+                    if(args.size < 2) {
+                        sender.sendMessage(mm.deserialize(Config.prefix() + "<red> /wtab header [text]"))
+                        return true
+                    }
+                    var header = ""
+                    for (i in 1 until args.size) {
+                        header += args[i] + " "
+                    }
+                    GroupManager.setHeader(header)
+                    sender.sendMessage(mm.deserialize(Config.prefix() + "<gray> The header was set to <green>${header}"))
+                    sender.playSound(sender.location, "minecraft:entity.player.levelup", 5F, 2F)
+                }
+                "footer" -> {
+                    if(args.size < 2) {
+                        sender.sendMessage(mm.deserialize(Config.prefix() + "<red> /wtab footer [text]"))
+                        return true
+                    }
+                    var footer = ""
+                    for (i in 1 until args.size) {
+                        footer += args[i] + " "
+                    }
+                    GroupManager.setFooter(footer)
+                    sender.sendMessage(mm.deserialize(Config.prefix() + "<gray> The footer was set to <green>${footer}"))
+                    sender.playSound(sender.location, "minecraft:entity.player.levelup", 5F, 2F)
+                }
+                "test" -> {
+                    sender.sendMessage(mm.deserialize(Config.prefix() + "<gray>Es sind gerade <green>${CloudNetManager.getOnlinePlayers()} <gray> Spieler online"))
+                }
             }
 
         } else TODO()
@@ -132,6 +162,8 @@ class WTabCommand: CommandExecutor, TabCompleter {
             tabComplete.add("create")
             tabComplete.add("delete")
             tabComplete.add("exists")
+            tabComplete.add("header")
+            tabComplete.add("footer")
         } else if(args.size == 2) {
             if(args[0] == "set" || args[0] == "delete") {
                 GroupManager.getAllGroups().forEach {
