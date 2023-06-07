@@ -6,15 +6,19 @@ import de.theskyscout.wtab.database.MongoDB
 import de.theskyscout.wtab.listeners.MessageListeners
 import de.theskyscout.wtab.manager.TablistManager
 import org.bukkit.Bukkit
+import org.bukkit.event.HandlerList
 import org.bukkit.plugin.java.JavaPlugin
 
 class WTab : JavaPlugin() {
 
     companion object {
+
         lateinit var instance: WTab
+        var enabled :Boolean = false
     }
 
     override fun onEnable() {
+        enabled = true
         instance = this
         Config.load()
         Config.loadLuckPerms()
@@ -33,4 +37,5 @@ class WTab : JavaPlugin() {
         val manager = Bukkit.getPluginManager()
         manager.registerEvents(MessageListeners(), this)
     }
+
 }

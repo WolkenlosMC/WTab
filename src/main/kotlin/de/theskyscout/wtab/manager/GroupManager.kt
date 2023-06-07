@@ -151,6 +151,7 @@ object GroupManager {
 
     fun getAllGroups() : List<Document> {
         if(Config.isLuckperms()) {
+            if(!Config.checkLuckPerms()) return listOf()
             val luckPermsAPI = LuckPermsProvider.get()
             val result = mutableListOf<Document>()
             for (group in luckPermsAPI.groupManager.loadedGroups) {
@@ -190,6 +191,7 @@ object GroupManager {
     }
     fun existGroup(name: String) : Boolean{
         if(Config.isLuckperms()) {
+            if(!Config.checkLuckPerms()) return false
             val luckPermsAPI = LuckPermsProvider.get()
             return luckPermsAPI.groupManager.getGroup(name) != null
         }
@@ -227,6 +229,7 @@ object GroupManager {
 
     fun getPrefix(player: Player): String {
         if(Config.isLuckperms()) {
+            if(!Config.checkLuckPerms()) return ""
             val api = LuckPermsProvider.get()
             val user = api.userManager.getUser(player.uniqueId)
             val group = user?.primaryGroup ?: return ""

@@ -1,9 +1,13 @@
 package de.theskyscout.wtab.config
 
 import de.theskyscout.wtab.WTab
+import de.theskyscout.wtab.manager.TablistManager
 import de.theskyscout.wtab.utils.ConfigUtil
+import de.theskyscout.wtab.utils.TablistSortUtil
 import net.luckperms.api.LuckPermsProvider
 import org.bukkit.Bukkit
+import org.bukkit.scheduler.BukkitRunnable
+import java.io.File
 
 object Config {
 
@@ -61,4 +65,24 @@ object Config {
             LuckPermsProvider.get()
         }
     }
+
+    fun checkLuckPerms() : Boolean {
+        if(!WTab.enabled) return false
+        if(isLuckperms()) {
+            if(Bukkit.getServer().pluginManager.getPlugin("LuckPerms") == null) {
+                WTab.instance.logger.severe("LuckPerms is not installed!")
+                TablistManager.tablistTask!!.cancel()
+                WTab.enabled = false
+                object : BukkitRunnable() {
+                    override fun run() {
+                        Bukkit.getPluginManager().disablePlugin(WTab.instance)
+                    }
+                }.runTaskLater(WTab.instance, 20)
+                return false
+            }
+            return true
+        }
+        return false
+    }
+
 }

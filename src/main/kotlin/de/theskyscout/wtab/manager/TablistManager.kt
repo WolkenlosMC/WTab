@@ -9,11 +9,13 @@ import net.luckperms.api.LuckPermsProvider
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
+import org.bukkit.scheduler.BukkitTask
 import java.awt.GridBagConstraints
 
 object TablistManager {
     private val mm = MiniMessage.miniMessage()
 
+    var tablistTask: BukkitTask? = null
     fun setTablist(player: Player) {
         val scoreboard = player.scoreboard
         player.sendPlayerListHeaderAndFooter(mm.deserialize(GroupManager.getHeader()), mm.deserialize(GroupManager.getFooter()))
@@ -33,6 +35,7 @@ object TablistManager {
     fun setPlayerTeam(player: Player) {
         val scoreboard = player.scoreboard
         if(Config.isLuckperms()) {
+            if(!Config.checkLuckPerms())return
             val api = LuckPermsProvider.get()
             val user = api.userManager.getUser(player.uniqueId)
             val group = user?.primaryGroup ?: return
@@ -59,9 +62,11 @@ object TablistManager {
     }
 
     fun updateTablist() {
+        if(WTab.instance.server.onlinePlayers.isEmpty()) return
         WTab.instance.logger.info("Starting Tablist")
-       object : BukkitRunnable() {
+        tablistTask = object : BukkitRunnable() {
            override fun run() {
+               if(!WTab.enabled) return
                setAllPlayerTeams()
            }
        }.runTaskTimer(WTab.instance, 0L, 20L)
