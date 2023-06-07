@@ -3,7 +3,7 @@
 ## Installing
 [LuckPerms](https://luckperms.net) is recommented.
 
-## [Click to install WTab v1.0](coming soon)
+## [Click to install WTab v1.0](https://hangar.papermc.io/TheSkyScout/WTab)
 
 ## Roadmap 
 - finish the plugin
