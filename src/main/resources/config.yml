@@ -30,4 +30,4 @@ footer: ""
 ########################################################################################
 #ONLY NEEDED WHEN SAVE METHOD IS MONGODB
 mongo_uri: "mongodb://localhost:27017/"
-database: "wolkenlos"
+database: "database"
