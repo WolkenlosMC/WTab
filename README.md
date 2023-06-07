@@ -28,17 +28,21 @@ save-method: "FILE"
 #FILE - Save data in files
 #MONGODB - Save data in MongoDB | !! Server wide data !!
 #MySQL support will be added in the future!
-tablist-method: "LUCKPERMS"
+tablist-method: "PERMISSION"
 #Tablist Method - PERMISSION or LUCKPERMS
 #PERMISSION - Use Permissions to set the tablist
 #LUCKPERMS - Use LuckPerms to set the tablist
 
-
+# Only needed when save method is FILE
+header: ""
+#Header of the tablist
+footer: ""
+#Footer of the tablist
 
 ########################################################################################
 #                                         Database                                     #
 ########################################################################################
 #ONLY NEEDED WHEN SAVE METHOD IS MONGODB
-mongo_uri: "mongodb+srv://theskyscout:RokBhzFJkPBcNz4T@cluster0.scfbc0h.mongodb.net/?retryWrites=true&w=majority"
-database: "wolkenlos"
+mongo_uri: "mongodb://localhost:27017/"
+database: "database"
 ```
