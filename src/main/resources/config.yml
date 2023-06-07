@@ -20,10 +20,11 @@ tablist-method: "PERMISSION"
 #LUCKPERMS - Use LuckPerms to set the tablist
 
 # Only needed when save method is FILE
-header: ""
+header: "<gray>Example Header"
 #Header of the tablist
-footer: ""
+footer: "<gray>Example Footer"
 #Footer of the tablist
+#Use Adventure color codes for header and prefix https://docs.advntr.dev/minimessage/format.html#color | https://webui.advntr.dev
 
 ########################################################################################
 #                                         Database                                     #

@@ -139,9 +139,6 @@ class WTabCommand: CommandExecutor, TabCompleter {
                     sender.sendMessage(mm.deserialize(Config.prefix() + "<gray> The footer was set to <green>${footer}"))
                     sender.playSound(sender.location, "minecraft:entity.player.levelup", 5F, 2F)
                 }
-                "test" -> {
-                    sender.sendMessage(mm.deserialize(Config.prefix() + "<gray>Es sind gerade <green>${CloudNetManager.getOnlinePlayers()} <gray> Spieler online"))
-                }
             }
 
         } else TODO()
