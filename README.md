@@ -1,5 +1,4 @@
 # WTab
-
 A simple tablist plugin that is compatible with luckperms.
 
 ## Installing
