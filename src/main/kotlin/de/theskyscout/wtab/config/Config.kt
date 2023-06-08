@@ -59,10 +59,16 @@ object Config {
         if(isLuckperms()) {
             if(Bukkit.getServer().pluginManager.getPlugin("LuckPerms") == null) {
                 WTab.instance.logger.severe("LuckPerms is not installed!")
-                Bukkit.getPluginManager().disablePlugin(WTab.instance)
-                return
+                WTab.instance.logger.severe("Please install LuckPerms or change the tablist-method in the config.yml to PERMISSION")
+                WTab.enabled = false
+                object : BukkitRunnable() {
+                    override fun run() {
+                        Bukkit.getPluginManager().disablePlugin(WTab.instance)
+                    }
+                }.runTaskLater(WTab.instance, 20)
+            } else {
+                LuckPermsProvider.get()
             }
-            LuckPermsProvider.get()
         }
     }
 
@@ -71,6 +77,7 @@ object Config {
         if(isLuckperms()) {
             if(Bukkit.getServer().pluginManager.getPlugin("LuckPerms") == null) {
                 WTab.instance.logger.severe("LuckPerms is not installed!")
+                WTab.instance.logger.severe("Please install LuckPerms or change the tablist-method in the config.yml to PERMISSION")
                 TablistManager.tablistTask!!.cancel()
                 WTab.enabled = false
                 object : BukkitRunnable() {
