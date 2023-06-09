@@ -4,7 +4,7 @@ import de.theskyscout.wtab.config.Config
 import de.theskyscout.wtab.database.MongoDB
 import de.theskyscout.wtab.utils.ConfigUtil
 import de.theskyscout.wtab.utils.ItemBuilder
-import de.theskyscout.wtab.utils.TablistSortUtil
+import net.kyori.adventure.text.minimessage.MiniMessage
 import net.luckperms.api.LuckPermsProvider
 import org.bson.Document
 import org.bukkit.Bukkit
@@ -14,6 +14,8 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
 object GroupManager {
+
+    private val mm = MiniMessage.miniMessage()
 
     fun setGroupPrefix(name: String, prefix: String) {
         if(Config.saveMethodIsMongoDB()) {
@@ -181,7 +183,7 @@ object GroupManager {
 
     fun existGroupData(name: String) : Boolean{
         if(Config.saveMethodIsMongoDB()) {
-            val result = MongoDB.collection.find(Document().append("_id", name)).first() ?: return false
+            MongoDB.collection.find(Document().append("_id", name)).first() ?: return false
             return true
         }
         if (Config.saveMethodIsFile()) {
@@ -196,7 +198,7 @@ object GroupManager {
             return luckPermsAPI.groupManager.getGroup(name) != null
         }
         if(Config.saveMethodIsMongoDB()) {
-            val result = MongoDB.collection.find(Document().append("_id", name)).first() ?: return false
+            MongoDB.collection.find(Document().append("_id", name)).first() ?: return false
             return true
         }
         if (Config.saveMethodIsFile()) {
@@ -209,7 +211,7 @@ object GroupManager {
         val result = mutableListOf<ItemStack>()
         for (group in getAllGroups()) {
             result.add(ItemBuilder(Material.NAME_TAG)
-                .setDisplayName("<#34ebde>${group["_id"].toString().capitalize()}")
+                .setDisplayName("<#34ebde>${group["_id"].toString().replaceFirstChar { it.uppercase() }}")
                 .addLore("<gray>------------------")
                 .addLore("<gray>Prefix: ${group["prefix"]}")
                 .addLore("<gray>Order: <green>${group["order"]}")
@@ -220,7 +222,7 @@ object GroupManager {
     }
 
     fun getGroupListInventory() : Inventory {
-        val inventory = Bukkit.createInventory(null, 54, "Groups")
+        val inventory = Bukkit.createInventory(null, 54, mm.deserialize("<gray> WTab - Group List"))
         for (item in getGroupListAsItemList()) {
             inventory.addItem(item)
         }

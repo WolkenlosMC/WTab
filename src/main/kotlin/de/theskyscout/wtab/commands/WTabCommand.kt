@@ -1,15 +1,12 @@
 package de.theskyscout.wtab.commands
 
 import de.theskyscout.wtab.config.Config
-import de.theskyscout.wtab.manager.CloudNetManager
 import de.theskyscout.wtab.manager.GroupManager
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
-import org.bukkit.entity.Entity
-import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 
 class WTabCommand: CommandExecutor, TabCompleter {
@@ -23,7 +20,7 @@ class WTabCommand: CommandExecutor, TabCompleter {
                 return true
             }
             if(args?.size!! < 1) {
-                sender.sendMessage(mm.deserialize(Config.prefix() + "<red> /wtab [ create | delete | list | set ]"))
+                sender.sendMessage(mm.deserialize(Config.prefix() + "<red> /wtab [ create | delete | set | list | exists ]"))
                 return true
             }
             when(args[0]) {
@@ -141,7 +138,7 @@ class WTabCommand: CommandExecutor, TabCompleter {
                 }
             }
 
-        } else TODO()
+        } else sender.sendMessage(mm.deserialize(Config.prefix() + "<red>Console compatibility is not yet available :C"))
 
         return true
     }

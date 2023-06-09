@@ -7,7 +7,6 @@ import de.theskyscout.wtab.listeners.MessageListeners
 import de.theskyscout.wtab.manager.TablistManager
 import de.theskyscout.wtab.utils.UpdateChecker
 import org.bukkit.Bukkit
-import org.bukkit.event.HandlerList
 import org.bukkit.plugin.java.JavaPlugin
 
 class WTab : JavaPlugin() {

@@ -10,7 +10,6 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
-import java.awt.GridBagConstraints
 
 object TablistManager {
     private val mm = MiniMessage.miniMessage()
