@@ -6,7 +6,7 @@ import de.theskyscout.wtab.database.MongoDB
 import de.theskyscout.wtab.listeners.MessageListeners
 import de.theskyscout.wtab.manager.TablistManager
 import de.theskyscout.wtab.utils.UpdateChecker
-import de.theskyscout.wtab.utils.proxies.BungeeCordMessaging
+import de.theskyscout.wtab.utils.proxies.ProxyMessageChannel
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -30,7 +30,7 @@ class WTab : JavaPlugin() {
     }
 
     override fun onDisable() {
-        BungeeCordMessaging.unregisterChannel()
+        ProxyMessageChannel.unregisterChannel()
         enabled = false
     }
 
@@ -52,8 +52,8 @@ class WTab : JavaPlugin() {
         } else logger.info("You are using the latest version!")
 
         // Try to connect to BungeeCord
-        BungeeCordMessaging.registerChannel()
-        BungeeCordMessaging.requestData()
+        ProxyMessageChannel.registerChannel()
+        ProxyMessageChannel.requestData()
 
     }
 

@@ -7,16 +7,11 @@ import de.theskyscout.wtab.WTab
 import de.theskyscout.wtab.utils.Placeholders
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.messaging.PluginMessageListener
 import org.bukkit.scheduler.BukkitRunnable
-import org.bukkit.scheduler.BukkitTask
 
-object BungeeCordMessaging : PluginMessageListener {
+object ProxyMessageChannel : PluginMessageListener {
 
-    var enabled = false
 
     fun registerChannel() {
         WTab.instance.server.messenger.registerOutgoingPluginChannel(WTab.instance, "BungeeCord")
@@ -32,8 +27,7 @@ object BungeeCordMessaging : PluginMessageListener {
         if(channel != "BungeeCord") return
         val input = ByteStreams.newDataInput(message)
         when(input.readUTF()) {
-            "GetPlayerServer" -> {
-                input.readUTF()
+            "GetServer" -> {
                 val serverName = input.readUTF()
                 Placeholders.serverName = serverName
             }
@@ -53,26 +47,20 @@ object BungeeCordMessaging : PluginMessageListener {
     }
 
     fun requestData() {
-        var runnable:BukkitTask? = null
-        runnable = object : BukkitRunnable() {
+        var counter = 0
+        object : BukkitRunnable() {
             override fun run() {
-                var player = Iterables.getFirst(Bukkit.getOnlinePlayers(), null) ?: return
-                sendToServer(player, mutableListOf("GetPlayerServer", player.name))
-                runnable?.cancel()
-                runnable = object : BukkitRunnable() {
-                    override fun run() {
-                        if(Placeholders.serverName == "") {
-                            runnable?.cancel()
-                            WTab.instance.logger.warning("Could not connect to BungeeCord/Velocity!")
-                            enabled = false
-                            return
-                        }
-                        player = Iterables.getFirst(Bukkit.getOnlinePlayers(), null) ?: return
-                        sendToServer(player, mutableListOf("PlayerCount", Placeholders.serverName))
-                    }
-                }.runTaskTimer(WTab.instance, 10L, 20L)
+                val player = Iterables.getFirst(Bukkit.getOnlinePlayers(), null) ?: return
+                if(counter >= 1 && Placeholders.serverName == "") {
+                    WTab.instance.logger.warning("Could not connect to BungeeCord!")
+                    cancel()
+                    return
+                }
+                sendToServer(player, mutableListOf("GetServer", "GetServer"))
+                sendToServer(player, mutableListOf("PlayerCount", "ALL"))
+                counter++
             }
-        }.runTaskTimer(WTab.instance, 0L, 5L)
+        }.runTaskTimer(WTab.instance, 0, 20)
     }
 
 
