@@ -1,5 +1,6 @@
 package de.theskyscout.wtab.utils
 
+import de.theskyscout.wtab.manager.GroupManager
 import net.kyori.adventure.text.TextComponent
 import org.bukkit.entity.Player
 
@@ -12,6 +13,8 @@ object Placeholders {
         return string
             .replace("%player%", player.name)
             .replace("%p%", player.name)
+            .replace("%rank%", GroupManager.getPrefix(player))
+            .replace("%r%", GroupManager.getPrefix(player))
             .replace("%player_displayname%", (player.displayName() as TextComponent).content())
             .replace("%p_d%", (player.displayName() as TextComponent).content())
             .replace("%online_players%", player.server.onlinePlayers.size.toString())
