@@ -2,6 +2,7 @@ package de.theskyscout.wtab.manager
 
 import de.theskyscout.wtab.WTab
 import de.theskyscout.wtab.config.Config
+import de.theskyscout.wtab.utils.Placeholders
 import de.theskyscout.wtab.utils.TablistSortUtil
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.minimessage.MiniMessage
@@ -16,8 +17,9 @@ object TablistManager {
 
     var tablistTask: BukkitTask? = null
     fun setTablist(player: Player) {
-        val scoreboard = player.scoreboard
-        player.sendPlayerListHeaderAndFooter(mm.deserialize(GroupManager.getHeader()), mm.deserialize(GroupManager.getFooter()))
+        val header = mm.deserialize(Placeholders.replaceInString(GroupManager.getHeader(), player))
+        val footer = mm.deserialize(Placeholders.replaceInString(GroupManager.getFooter(), player))
+        player.sendPlayerListHeaderAndFooter(header, footer)
     }
 
 
@@ -61,7 +63,6 @@ object TablistManager {
     }
 
     fun updateTablist() {
-        if(WTab.instance.server.onlinePlayers.isEmpty()) return
         WTab.instance.logger.info("Starting Tablist")
         tablistTask = object : BukkitRunnable() {
            override fun run() {

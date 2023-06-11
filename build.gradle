@@ -5,11 +5,10 @@
 }
 
 group = 'de.theskyscout'
-version = '1.0.2-SNAPSHOT'
+version = '1.1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
-    maven { url 'https://repo.cloudnetservice.eu/repository/releases/' }
     maven {
         name = "papermc-repo"
         url = "https://repo.papermc.io/repository/maven-public/"
