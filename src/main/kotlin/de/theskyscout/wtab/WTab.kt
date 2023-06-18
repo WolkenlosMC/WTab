@@ -50,7 +50,6 @@ class WTab : JavaPlugin() {
             logger.warning("There is a new update available!")
             logger.warning("New Version: " + UpdateChecker.getLatestVersion(this))
         } else logger.info("You are using the latest version!")
-
         // Try to connect to BungeeCord
         ProxyMessageChannel.registerChannel()
         ProxyMessageChannel.requestData()
