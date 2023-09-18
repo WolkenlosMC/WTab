@@ -17,7 +17,7 @@ A simple tablist plugin that is compatible with luckperms.
 #                                   Wolkenlos - Tab                                    #
 #                                                                                      #
 #               Version                                     Author                     #
-#               1.1.1                                     TheSkyScout                  #
+#               1.1.2                                     TheSkyScout                  #
 #                                                                                      #
 ########################################################################################
 #                                       SETTINGS                                       #
