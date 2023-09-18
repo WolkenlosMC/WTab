@@ -4,6 +4,7 @@ import de.theskyscout.wtab.commands.WTabCommand
 import de.theskyscout.wtab.config.Config
 import de.theskyscout.wtab.database.MongoDB
 import de.theskyscout.wtab.listeners.MessageListeners
+import de.theskyscout.wtab.manager.DataCaching
 import de.theskyscout.wtab.manager.TablistManager
 import de.theskyscout.wtab.utils.UpdateChecker
 import de.theskyscout.wtab.utils.proxies.ProxyMessageChannel
@@ -24,6 +25,7 @@ class WTab : JavaPlugin() {
         Config.load()
         Config.loadLuckPerms()
         MongoDB.connect()
+        DataCaching.refreshCache(this)
         registerCommands()
         registerListeners()
         registerOther()

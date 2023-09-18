@@ -151,18 +151,13 @@ class WTabCommand: CommandExecutor, TabCompleter {
     ): MutableList<String>? {
         val tabComplete = mutableListOf<String>()
         if(args?.size!! == 1) {
-            tabComplete.add("list")
-            tabComplete.add("set")
-            tabComplete.add("create")
-            tabComplete.add("delete")
-            tabComplete.add("exists")
-            tabComplete.add("header")
-            tabComplete.add("footer")
+            val prelist = mutableListOf("create", "delete", "set", "list", "exists", "header", "footer")
+            tabComplete.addAll(prelist.filter { it.startsWith(args[0])})
         } else if(args.size == 2) {
             if(args[0] == "set" || args[0] == "delete") {
-                GroupManager.getAllGroups().forEach {
-                    tabComplete.add(it["_id"].toString())
-                }
+                val prelist = mutableListOf<String>()
+                prelist.addAll(GroupManager.getAllGroups().map { it["_id"].toString() })
+                tabComplete.addAll(prelist.filter { it.startsWith(args[1])})
             }
         } else if(args.size == 3) {
             if(args[0] == "set") {

@@ -54,13 +54,7 @@ object GroupManager {
     }
 
     fun getGroup(name: String) : Document? {
-        if(Config.saveMethodIsMongoDB()) {
-            return MongoDB.collection.find(Document().append("_id", name)).first() ?: Document()
-        }else if (Config.saveMethodIsFile()) {
-            val config = ConfigUtil("groups.yml")
-            return Document().append("prefix", config.config.getString("$name.prefix")).append("order", config.config.getInt("$name.order"))
-        }
-        return null
+        return DataCaching.cache[name]
     }
 
     fun removeGroup(name: String) {
@@ -131,23 +125,11 @@ object GroupManager {
     }
 
     fun getHeader() : String {
-        if(Config.saveMethodIsMongoDB()) {
-            return MongoDB.collection.find(Document().append("_id", "settings")).first()?.getString("header") ?: ""
-        }else if (Config.saveMethodIsFile()) {
-            val config = ConfigUtil("config.yml")
-            return config.config.getString("header") ?: ""
-        }
-        return ""
+        return DataCaching.cache["settings"]?.getString("header") ?: ""
     }
 
     fun getFooter() : String {
-        if(Config.saveMethodIsMongoDB()) {
-            return MongoDB.collection.find(Document().append("_id", "settings")).first()?.getString("footer") ?: ""
-        }else if (Config.saveMethodIsFile()) {
-            val config = ConfigUtil("config.yml")
-            return config.config.getString("footer") ?: ""
-        }
-        return ""
+        return DataCaching.cache["settings"]?.getString("footer") ?: ""
     }
 
 
@@ -160,35 +142,14 @@ object GroupManager {
                 result.add(Document().append("_id", group.name).append("prefix", getGroup(group.name)?.get("prefix")).append("order", getGroup(group.name)?.get("order")))
             }
             return result.sortedBy { it["order"] as Int? ?: 0  }
+        } else {
+            return DataCaching.cache.values.filter { it["_id"] != "settings" }.sortedBy { it["order"] as Int? ?: 0  }
         }
-        if(Config.saveMethodIsMongoDB()) {
-            val result = mutableListOf<Document>()
-            MongoDB.collection.find().forEach {
-               if(it.getString("_id") != "settings") {
-                   result.add(Document().append("_id", it.getString("_id")).append("prefix", it.getString("prefix")).append("order", it.getInteger("order")))
-               }
-            }
-            return result.sortedBy { it["order"] as Int? ?: 0  }
-        }else if (Config.saveMethodIsFile()) {
-            val config = ConfigUtil("groups.yml")
-            val result = mutableListOf<Document>()
-            for (group in config.config.getKeys(false)) {
-                result.add(Document().append("_id", group).append("prefix", config.config.getString("$group.prefix")).append("order", config.config.getInt("$group.order")))
-            }
-            return result.sortedBy { it["order"] as Int? ?: 0  }
-        }
-        return mutableListOf()
 
     }
 
-    fun existGroupData(name: String) : Boolean{
-        if(Config.saveMethodIsMongoDB()) {
-            MongoDB.collection.find(Document().append("_id", name)).first() ?: return false
-            return true
-        }
-        if (Config.saveMethodIsFile()) {
-            return ConfigUtil("groups.yml").config.contains(name)
-        }
+    private fun existGroupData(name: String) : Boolean{
+        DataCaching.cache[name]?.let { return true }
         return false
     }
     fun existGroup(name: String) : Boolean{
@@ -196,18 +157,12 @@ object GroupManager {
             if(!Config.checkLuckPerms()) return false
             val luckPermsAPI = LuckPermsProvider.get()
             return luckPermsAPI.groupManager.getGroup(name) != null
+        } else {
+            return getAllGroups().any { it["_id"] == name }
         }
-        if(Config.saveMethodIsMongoDB()) {
-            MongoDB.collection.find(Document().append("_id", name)).first() ?: return false
-            return true
-        }
-        if (Config.saveMethodIsFile()) {
-            return ConfigUtil("groups.yml").config.contains(name)
-        }
-        return false
     }
 
-    fun getGroupListAsItemList(): List<ItemStack> {
+    private fun getGroupListAsItemList(): List<ItemStack> {
         val result = mutableListOf<ItemStack>()
         for (group in getAllGroups()) {
             result.add(ItemBuilder(Material.NAME_TAG)
@@ -235,10 +190,10 @@ object GroupManager {
             val api = LuckPermsProvider.get()
             val user = api.userManager.getUser(player.uniqueId)
             val group = user?.primaryGroup ?: return ""
-            if(!GroupManager.existGroup(group)) return ""
-            return GroupManager.getGroup(group)?.get("prefix").toString()
+            if(!existGroup(group)) return ""
+            return getGroup(group)?.get("prefix").toString()
         } else {
-            GroupManager.getAllGroups().forEach {
+            getAllGroups().forEach {
                 if(player.hasPermission("wtab." + it["_id"].toString())) {
                     return it["prefix"].toString()
                 }

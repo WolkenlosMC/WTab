@@ -13,6 +13,7 @@ object MongoDB {
     lateinit var client: MongoClient
     lateinit var database: MongoDatabase
     lateinit var collection: MongoCollection<Document>
+    var connected = false
 
     fun connect() {
         if(Config.get("save-method") != "MONGODB") return
@@ -24,6 +25,7 @@ object MongoDB {
             }
             collection = database.getCollection("wtab")
             WTab.instance.logger.info("Connected to MongoDB!")
+            connected = true
         } catch (e: Exception) {
             WTab.instance.logger.warning("Could not connect to MongoDB!")
             e.printStackTrace()
