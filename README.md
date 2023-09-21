@@ -4,7 +4,7 @@ A simple tablist plugin that is compatible with luckperms.
 ## Installing
 [LuckPerms](https://luckperms.net) is recommented.
 
-## [Click to install WTab v1.1.1](https://hangar.papermc.io/TheSkyScout/WTab)
+## [Click to install WTab v1.1.2](https://hangar.papermc.io/TheSkyScout/WTab)
 
 ## Roadmap 
 - finish the plugin
