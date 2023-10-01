@@ -1,6 +1,7 @@
 package de.theskyscout.wtab.commands
 
 import de.theskyscout.wtab.config.Config
+import de.theskyscout.wtab.config.MessagesConfig
 import de.theskyscout.wtab.manager.GroupManager
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.command.Command
@@ -20,13 +21,13 @@ class WTabCommand: CommandExecutor, TabCompleter {
                 return true
             }
             if(args?.size!! < 1) {
-                sender.sendMessage(mm.deserialize(Config.prefix() + "<red> /wtab [ create | delete | set | list | exists ]"))
+                sender.sendMessage(mm.deserialize(Config.prefix() + "<red> /wtab [ create | delete | set | list | exists | messages ]"))
                 return true
             }
             when(args[0]) {
                 "list" -> {
                     if(args.size == 2) {
-                        if(args[1].equals("-inv") || args[1].equals("-i")) {
+                        if(args[1] == "-inv" || args[1] == "-i") {
                             sender.openInventory(GroupManager.getGroupListInventory())
                             return true
                         } else sender.sendMessage(mm.deserialize(Config.prefix() + "<red> /wtab list [-inv]"))
@@ -136,6 +137,15 @@ class WTabCommand: CommandExecutor, TabCompleter {
                     sender.sendMessage(mm.deserialize(Config.prefix() + "<gray> The footer was set to <green>${footer}"))
                     sender.playSound(sender.location, "minecraft:entity.player.levelup", 5F, 2F)
                 }
+                "messages" -> {
+                    if(args.size < 2 || args[1] != "upload") {
+                        sender.sendMessage(mm.deserialize(Config.prefix() + "<red> /wtab messages upload"))
+                        return true
+                    }
+                    sender.sendMessage(mm.deserialize(Config.prefix() + "<gray> Uploading messages..."))
+                    MessagesConfig.uploadToMongo()
+                    sender.sendMessage(mm.deserialize(Config.prefix() + "<gray> Messages uploaded!"))
+                }
             }
 
         } else sender.sendMessage(mm.deserialize(Config.prefix() + "<red>Console compatibility is not yet available :C"))
@@ -151,15 +161,24 @@ class WTabCommand: CommandExecutor, TabCompleter {
     ): MutableList<String>? {
         val tabComplete = mutableListOf<String>()
         if(args?.size!! == 1) {
-            val prelist = mutableListOf("create", "delete", "set", "list", "exists", "header", "footer")
+            val prelist = mutableListOf("create", "delete", "set", "list", "exists", "header", "footer", "messages")
             tabComplete.addAll(prelist.filter { it.startsWith(args[0])})
-        } else if(args.size == 2) {
+        }
+        if(args.size == 2) {
+            if(args[0] == "messages") {
+                val prelist = mutableListOf("upload")
+                tabComplete.addAll(prelist.filter { it.startsWith(args[1])})
+            }
+        }
+
+        if(args.size == 2) {
             if(args[0] == "set" || args[0] == "delete") {
                 val prelist = mutableListOf<String>()
                 prelist.addAll(GroupManager.getAllGroups().map { it["_id"].toString() })
                 tabComplete.addAll(prelist.filter { it.startsWith(args[1])})
             }
-        } else if(args.size == 3) {
+        }
+        if(args.size == 3) {
             if(args[0] == "set") {
                 tabComplete.add("prefix")
                 tabComplete.add("order")

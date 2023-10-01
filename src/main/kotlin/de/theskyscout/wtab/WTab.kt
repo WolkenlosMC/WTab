@@ -2,6 +2,7 @@ package de.theskyscout.wtab
 
 import de.theskyscout.wtab.commands.WTabCommand
 import de.theskyscout.wtab.config.Config
+import de.theskyscout.wtab.config.MessagesConfig
 import de.theskyscout.wtab.database.MongoDB
 import de.theskyscout.wtab.listeners.MessageListeners
 import de.theskyscout.wtab.manager.DataCaching
@@ -23,6 +24,7 @@ class WTab : JavaPlugin() {
         enabled = true
         instance = this
         Config.load()
+        MessagesConfig.load()
         Config.loadLuckPerms()
         MongoDB.connect()
         DataCaching.refreshCache(this)
@@ -33,6 +35,7 @@ class WTab : JavaPlugin() {
 
     override fun onDisable() {
         ProxyMessageChannel.unregisterChannel()
+        TablistManager.resetTablist()
         enabled = false
     }
 

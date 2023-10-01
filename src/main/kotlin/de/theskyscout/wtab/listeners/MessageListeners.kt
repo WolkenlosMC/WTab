@@ -2,6 +2,7 @@ package de.theskyscout.wtab.listeners
 
 import de.theskyscout.wtab.WTab
 import de.theskyscout.wtab.config.Config
+import de.theskyscout.wtab.config.MessagesConfig
 import de.theskyscout.wtab.manager.GroupManager
 import de.theskyscout.wtab.utils.UpdateChecker
 import io.papermc.paper.event.player.AsyncChatEvent
@@ -19,18 +20,29 @@ class MessageListeners: Listener {
 
     @EventHandler
     fun onMessage(event: AsyncChatEvent) {
-        val message = (event.message() as TextComponent).content()
-        val name = (event.player.displayName() as TextComponent).content()
+        val messageContent = (event.message() as TextComponent).content()
+        var message = MessagesConfig.getMessage("chat-format")
+        if (message == null) message = "<gray>%player%<gray>: <white>%message%"
+        message = message.replace("%player%", MessagesConfig.getNameTag(event.player))
+        message = message.replace("%message%", messageContent)
         Bukkit.getOnlinePlayers().forEach {
-            it.sendMessage(mm.deserialize(GroupManager.getPrefix(event.player) + "<gray> | " + name + "<gray> » "+ message))
+            it.sendMessage(mm.deserialize(message))
         }
         event.isCancelled = true
     }
 
     @EventHandler
     fun onJoint(event: PlayerJoinEvent) {
-        val name = (event.player.displayName() as TextComponent).content()
-        event.joinMessage(mm.deserialize(GroupManager.getPrefix(event.player) + "<gray> | " + name + "<gray> » "+ "joined the game"))
+        var message = MessagesConfig.getMessage("join-message")
+        if(message == "CANCEL") {
+            event.joinMessage(null)
+            return
+        }
+        if(message == null) message = MessagesConfig.getNameTag(event.player) + "<gray> » joined the game"
+        message = message.replace("%player%", MessagesConfig.getNameTag(event.player))
+        event.joinMessage(mm.deserialize(message))
+
+        // Update Checker
         if(event.player.hasPermission("wtab.update")) {
             if(UpdateChecker.checkForUpdate(WTab.instance)) {
                 event.player.sendMessage(mm.deserialize("<gray>------------------------"))
@@ -43,7 +55,13 @@ class MessageListeners: Listener {
 
     @EventHandler
     fun onQuit(event: PlayerQuitEvent) {
-        val name = (event.player.displayName() as TextComponent).content()
-        event.quitMessage(mm.deserialize(GroupManager.getPrefix(event.player) + "<gray> | " + name + "<gray> » "+ "left the game"))
+        var message = MessagesConfig.getMessage("quit-message")
+        if(message == "CANCEL") {
+            event.quitMessage(null)
+            return
+        }
+        if(message == null) message = MessagesConfig.getNameTag(event.player) + "<gray> » left the game"
+        message = message.replace("%player%", MessagesConfig.getNameTag(event.player))
+        event.quitMessage(mm.deserialize(message))
     }
 }

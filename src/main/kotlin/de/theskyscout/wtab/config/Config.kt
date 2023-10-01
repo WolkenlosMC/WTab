@@ -1,6 +1,7 @@
 package de.theskyscout.wtab.config
 
 import de.theskyscout.wtab.WTab
+import de.theskyscout.wtab.manager.DataCaching
 import de.theskyscout.wtab.manager.TablistManager
 import de.theskyscout.wtab.utils.ConfigUtil
 import net.luckperms.api.LuckPermsProvider
@@ -26,19 +27,19 @@ object Config {
     }
 
     fun saveMethodIsFile(): Boolean {
-        return ConfigUtil("config.yml").config.getString("save-method") == "FILE"
+        return DataCaching.settingsCache["save-method"] == "FILE"
     }
 
     fun saveMethodIsMongoDB(): Boolean {
-        return ConfigUtil("config.yml").config.getString("save-method") == "MONGODB"
+        return DataCaching.settingsCache["save-method"] == "MONGODB"
     }
 
     fun isLuckperms(): Boolean {
-        return ConfigUtil("config.yml").config.getString("tablist-method") == "LUCKPERMS"
+        return DataCaching.settingsCache["tablist-method"] == "LUCKPERMS"
     }
 
     fun isPerms(): Boolean {
-        return ConfigUtil("config.yml").config.getString("tablist-method") == "PERMISSION"
+        return DataCaching.settingsCache["tablist-method"] == "PERMISSION"
     }
 
     fun mongoURI(): String {

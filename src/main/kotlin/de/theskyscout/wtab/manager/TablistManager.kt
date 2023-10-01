@@ -2,6 +2,7 @@ package de.theskyscout.wtab.manager
 
 import de.theskyscout.wtab.WTab
 import de.theskyscout.wtab.config.Config
+import de.theskyscout.wtab.config.MessagesConfig
 import de.theskyscout.wtab.utils.Placeholders
 import de.theskyscout.wtab.utils.TablistSortUtil
 import net.kyori.adventure.text.format.NamedTextColor
@@ -11,29 +12,33 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
+import org.bukkit.scoreboard.DisplaySlot
 
 object TablistManager {
     private val mm = MiniMessage.miniMessage()
 
     var tablistTask: BukkitTask? = null
-    fun setTablist(player: Player) {
+    private fun setTablist(player: Player) {
         val header = mm.deserialize(Placeholders.replaceInString(GroupManager.getHeader(), player))
         val footer = mm.deserialize(Placeholders.replaceInString(GroupManager.getFooter(), player))
         player.sendPlayerListHeaderAndFooter(header, footer)
     }
 
 
-    fun registerTeams(player: Player) {
+    private fun registerTeams(player: Player) {
         val scoreboard = player.scoreboard
         GroupManager.getAllGroups().forEach {
             var team = scoreboard.getTeam(TablistSortUtil.orderToSort(it))
-            if(team == null) team = scoreboard.registerNewTeam(TablistSortUtil.orderToSort(it))
-            team.prefix((mm.deserialize("${it["prefix"]}<gray> | <gray>")))
+            if(team == null) {
+                team = scoreboard.registerNewTeam(TablistSortUtil.orderToSort(it))
+            }
+            val prefix = MessagesConfig.getTabPrefix(it)
+            if(team.prefix() != mm.deserialize(prefix)) team.prefix(mm.deserialize(prefix))
             team.color(NamedTextColor.GRAY)
         }
     }
 
-    fun setPlayerTeam(player: Player) {
+    private fun setPlayerTeam(player: Player) {
         val scoreboard = player.scoreboard
         if(Config.isLuckperms()) {
             if(!Config.checkLuckPerms())return
@@ -70,5 +75,24 @@ object TablistManager {
                setAllPlayerTeams()
            }
        }.runTaskTimer(WTab.instance, 0L, 20L)
+    }
+
+    fun resetTablist() {
+        tablistTask?.cancel()
+        tablistTask = null
+        val scoreboard = Bukkit.getScoreboardManager().mainScoreboard
+        scoreboard.teams.forEach {
+            it.unregister()
+        }
+        scoreboard.entries.forEach {
+            scoreboard.resetScores(it)
+        }
+        scoreboard.clearSlot(DisplaySlot.PLAYER_LIST)
+        scoreboard.entries.forEach {
+            scoreboard.resetScores(it)
+        }
+        Bukkit.getOnlinePlayers().forEach {
+            it.sendPlayerListHeaderAndFooter(mm.deserialize(""), mm.deserialize(""))
+        }
     }
 }

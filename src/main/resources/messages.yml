@@ -7,18 +7,19 @@
 ########################################################################################
 #                                       MESSAGES                                       #
 ########################################################################################
+save-method: "FILE"
+#Save Method - FILE or MONGODB | FILE - Save data in files | MONGODB - Save data in MongoDB | !! Server wide data !!
+#MySQL support will be added in the future!
+
 #Use Adventure color codes  https://docs.advntr.dev/minimessage/format.html#color | https://webui.advntr.dev
-chat-prefix: "%rank% | <gray>%player% :"
-#Format of the chat prefix | %rank% = Rank of the player | %player% = Name of the player
-tablist-prefix: "%rank% | <gray>%player%"
-#Format of the tablist prefix | %rank% = Rank of the player | %player% = Name of the player
+chat-format: "%player% : %message%"
+#Format of the chat prefix | %player% = Name-Tag-Format of the player | %message% = Message of the player
+name-tag-format: "%rank% <gray>| %player%"
+#Format of the name tag prefix | %rank% = Rank of the player | %player% = Name of the player
+tab-list-format: "%rank% <gray>| "
+#Format of the tablist prefix | %rank% = Rank of the player | Player name is automatically added at the end (Not changeable)
 join-message: "%player% <gray>joined the game"
-#Format of the join message | %player% = Name of the player
+#Format of the join message | %player% = Name-Tag-Format of the player | "CANCEL" to disable the message
 quit-message: "%player% <gray>left the game"
-#Format of the quit message | %player% = Name of the player
-no-permission: "<red>You don't have the permission to do that!"
-#Message when the player has no permission to do something
-no-player: "<red>Player not found!"
-#Message when the player is not online
-no-rank: "<red>Rank not found!"
-#Message when the rank is not found
+#Format of the quit message | %player% = Name-Tag-Format of the player | "CANCEL" to disable the message
+

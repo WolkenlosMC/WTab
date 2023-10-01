@@ -114,7 +114,7 @@ object GroupManager {
         }
     }
 
-    fun existHeaderFooter() : Boolean {
+    private fun existHeaderFooter() : Boolean {
         if(Config.saveMethodIsMongoDB()) {
             return MongoDB.collection.find(Document().append("_id", "settings")).first() != null
         }else if (Config.saveMethodIsFile()) {
