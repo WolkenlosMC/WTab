@@ -20,19 +20,20 @@ object DataCaching {
         plugin.logger.info("------------------------------------")
         object : BukkitRunnable() {
             override fun run() {
-            cache.clear()
                 if(Config.saveMethodIsMongoDB()) {
                     if(!MongoDB.connected) return
                     MongoDB.collection.find().forEach {
-                        cache[it["_id"] as String] = it
+                        if (cache[it["_id"] as String] != it) cache[it["_id"] as String] = it
                     }
                 } else {
                     var config = ConfigUtil("groups.yml")
                     config.config.getConfigurationSection("")?.getKeys(false)?.forEach {
-                        cache[it] = Document().append("_id", it).append("prefix", config.config.getString("$it.prefix")).append("order", config.config.getInt("$it.order"))
+                        val doc = Document().append("_id", it).append("prefix", config.config.getString("$it.prefix")).append("order", config.config.getInt("$it.order"))
+                        if (cache[it] != doc) cache[it] = doc
                     }
                     config = ConfigUtil("config.yml")
-                    cache["settings"] = Document().append("_id", "settings").append("header", config.config.getString("header")).append("footer", config.config.getString("footer"))
+                    val tabDoc = Document().append("_id", "settings").append("header", config.config.getString("header")).append("footer", config.config.getString("footer"))
+                    if (cache["settings"] != tabDoc) cache["settings"] = tabDoc
                 }
             }
 

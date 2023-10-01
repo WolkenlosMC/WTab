@@ -1,0 +1,24 @@
+########################################################################################
+#                                   Wolkenlos - Tab                                    #
+#                                                                                      #
+#               Version                                     Author                     #
+#               1.1.2                                     TheSkyScout                  #
+#                                                                                      #
+########################################################################################
+#                                       MESSAGES                                       #
+########################################################################################
+#Use Adventure color codes  https://docs.advntr.dev/minimessage/format.html#color | https://webui.advntr.dev
+chat-prefix: "%rank% | <gray>%player% :"
+#Format of the chat prefix | %rank% = Rank of the player | %player% = Name of the player
+tablist-prefix: "%rank% | <gray>%player%"
+#Format of the tablist prefix | %rank% = Rank of the player | %player% = Name of the player
+join-message: "%player% <gray>joined the game"
+#Format of the join message | %player% = Name of the player
+quit-message: "%player% <gray>left the game"
+#Format of the quit message | %player% = Name of the player
+no-permission: "<red>You don't have the permission to do that!"
+#Message when the player has no permission to do something
+no-player: "<red>Player not found!"
+#Message when the player is not online
+no-rank: "<red>Rank not found!"
+#Message when the rank is not found

@@ -26,23 +26,19 @@ object Config {
     }
 
     fun saveMethodIsFile(): Boolean {
-        if(ConfigUtil("config.yml").config.getString("save-method") == "FILE") return true
-        return false
+        return ConfigUtil("config.yml").config.getString("save-method") == "FILE"
     }
 
     fun saveMethodIsMongoDB(): Boolean {
-        if(ConfigUtil("config.yml").config.getString("save-method") == "MONGODB") return true
-        return false
+        return ConfigUtil("config.yml").config.getString("save-method") == "MONGODB"
     }
 
     fun isLuckperms(): Boolean {
-        if(ConfigUtil("config.yml").config.getString("tablist-method") == "LUCKPERMS") return true
-        return false
+        return ConfigUtil("config.yml").config.getString("tablist-method") == "LUCKPERMS"
     }
 
     fun isPerms(): Boolean {
-        if(ConfigUtil("config.yml").config.getString("tablist-method") == "PERMISSION") return true
-        return false
+        return ConfigUtil("config.yml").config.getString("tablist-method") == "PERMISSION"
     }
 
     fun mongoURI(): String {
