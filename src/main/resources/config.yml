@@ -27,6 +27,7 @@ footer: "<gray>Example Footer"
 #Use Adventure color codes for header and prefix https://docs.advntr.dev/minimessage/format.html#color | https://webui.advntr.dev
 
 update-notification: true
+#Check for updates on startup | true - Check for updates | false - Do not check for updates
 
 ########################################################################################
 #                                         Database                                     #

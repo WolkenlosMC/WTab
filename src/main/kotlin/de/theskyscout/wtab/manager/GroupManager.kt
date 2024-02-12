@@ -153,8 +153,7 @@ object GroupManager {
         return false
     }
     fun existGroup(name: String) : Boolean{
-        if(getGroup(name) != null) return true
-        return false
+        return getAllGroups().any { it["_id"] == name }
     }
 
     private fun getGroupListAsItemList(): List<ItemStack> {
