@@ -2,7 +2,7 @@
 #                                   Wolkenlos - Tab                                    #
 #                                                                                      #
 #               Version                                     Author                     #
-#               1.1.2                                     TheSkyScout                  #
+#               1.1.3                                     TheSkyScout                  #
 #                                                                                      #
 ########################################################################################
 #                                       SETTINGS                                       #
@@ -25,6 +25,8 @@ header: "<gray>Example Header"
 footer: "<gray>Example Footer"
 #Footer of the tablist
 #Use Adventure color codes for header and prefix https://docs.advntr.dev/minimessage/format.html#color | https://webui.advntr.dev
+
+update-notification: true
 
 ########################################################################################
 #                                         Database                                     #

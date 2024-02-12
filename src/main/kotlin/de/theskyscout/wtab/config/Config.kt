@@ -46,6 +46,10 @@ object Config {
         return ConfigUtil("config.yml").config.getString("mongo_uri")!!
     }
 
+    fun isUpdateNotify(): Boolean {
+        return ConfigUtil("config.yml").config.getBoolean("update-notification") ?: true
+    }
+
     fun save() {
         ConfigUtil("config.yml").save()
     }

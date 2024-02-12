@@ -41,7 +41,8 @@ object MessagesConfig {
 
     fun getTabPrefix(doc: Document): String {
         var tabPrefix = getMessage("tab-list-format")
-        val prefix = doc["prefix"] as String
+        val prefix = (doc["prefix"] ?: " ").toString()
+
         if(tabPrefix == null) return "$prefix<gray> | "
         tabPrefix = tabPrefix.replace("%rank%", prefix)
         return tabPrefix

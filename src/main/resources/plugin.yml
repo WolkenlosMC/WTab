@@ -1,7 +1,7 @@
 name: WTab
 version: '${version}'
 main: de.theskyscout.wtab.WTab
-api-version: 1.19
+api-version: 1.20
 authors: [ TheSkyScout ]
 description: Wolkenlos Tablist Plugin
 commands:

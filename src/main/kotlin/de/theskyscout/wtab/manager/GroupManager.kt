@@ -153,13 +153,8 @@ object GroupManager {
         return false
     }
     fun existGroup(name: String) : Boolean{
-        if(Config.isLuckperms()) {
-            if(!Config.checkLuckPerms()) return false
-            val luckPermsAPI = LuckPermsProvider.get()
-            return luckPermsAPI.groupManager.getGroup(name) != null
-        } else {
-            return getAllGroups().any { it["_id"] == name }
-        }
+        if(getGroup(name) != null) return true
+        return false
     }
 
     private fun getGroupListAsItemList(): List<ItemStack> {

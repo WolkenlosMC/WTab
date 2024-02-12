@@ -1,5 +1,6 @@
 package de.theskyscout.wtab.utils
 
+import de.theskyscout.wtab.config.Config
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.BufferedReader
 import java.io.IOException
@@ -9,6 +10,7 @@ import java.net.URL
 object UpdateChecker {
 
     fun checkForUpdate(plugin: JavaPlugin): Boolean{
+        if (!Config.isUpdateNotify()) return false
         return getLatestVersion(plugin) != plugin.description.version
     }
 
