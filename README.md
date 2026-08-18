@@ -47,3 +47,6 @@ footer: ""
 mongo_uri: "mongodb://localhost:27017/"
 database: "database"
 ```
+
+## AI Disclosure
+> No AI was used in the creation of WTab.
